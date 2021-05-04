@@ -14,6 +14,18 @@ const GitalkComponent = dynamic(
   },
   { ssr: false }
 )
+const UtterancesComponent = dynamic(
+  () => {
+    return import('@/components/Utterances')
+  },
+  { ssr: false }
+)
+const CusdisComponent = dynamic(
+  () => {
+    return import('react-cusdis').then(m => m.ReactCusdis)
+  },
+  { ssr: false }
+)
 
 const mapPageUrl = id => {
   return 'https://www.notion.so/' + id.replace(/-/g, '')
@@ -35,7 +47,7 @@ const FullWidthLayout = ({ children, blockMap, frontMatter }) => {
         <h1 className="font-bold text-3xl text-black dark:text-white">
           {frontMatter.title}
         </h1>
-        {frontMatter.type !== 'Page' && (
+        {frontMatter.type[0] !== 'Page' && (
           <nav className="flex mt-7 mb-2 items-center text-gray-500 dark:text-gray-400">
             <div className="flex">
               <a href={BLOG.socialLink || '#'} className="flex">
@@ -52,7 +64,7 @@ const FullWidthLayout = ({ children, blockMap, frontMatter }) => {
             </div>
             <div className="mx-2 md:ml-0">
               {formatDate(
-                frontMatter.date || frontMatter.createdTime,
+                frontMatter?.date?.start_date || frontMatter.createdTime,
                 BLOG.lang
               )}
             </div>
@@ -113,6 +125,21 @@ const FullWidthLayout = ({ children, blockMap, frontMatter }) => {
             owner: BLOG.comment.gitalkConfig.owner,
             admin: BLOG.comment.gitalkConfig.admin,
             distractionFreeMode: BLOG.comment.gitalkConfig.distractionFreeMode
+          }}
+        />
+      )}
+      {BLOG.comment && BLOG.comment.provider === 'utterances' && (
+        <UtterancesComponent issueTerm={frontMatter.id} layout="fullWidth" />
+      )}
+      {BLOG.comment && BLOG.comment.provider === 'cusdis' && (
+        <CusdisComponent
+          attrs={{
+            host: BLOG.comment.cusdisConfig.host,
+            appId: BLOG.comment.cusdisConfig.appId,
+            pageId: frontMatter.id,
+            pageTitle: frontMatter.title,
+            pageUrl: BLOG.link + router.asPath,
+            theme: BLOG.appearance
           }}
         />
       )}
