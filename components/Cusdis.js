@@ -25,6 +25,11 @@ const Cusdis = ({ id, url, title }) => {
         data-page-id={id}
         data-page-url={url}
         data-page-title={title}
+
+>
++ <script defer src="https://cusdis.com/js/widget/lang/zh-cn.js"></script>
+  <script defer src="https://cusdis.com/js/cusdis.es.js"></script>
+
       ></div>
     </div>
   )
